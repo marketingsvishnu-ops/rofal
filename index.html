@@ -1,0 +1,678 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APEX DIMENSION | Future Fitness</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --blue:#45e6ff;
+  --purple:#8d5bff;
+  --pink:#ff53d8;
+  --bg:#070812;
+  --muted:#a5a9bd;
+}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{
+  background:var(--bg);
+  color:white;
+  font-family:Arial,Helvetica,sans-serif;
+  overflow-x:hidden;
+}
+a{text-decoration:none;color:inherit}
+button,input,select,textarea{font:inherit}
+section{padding:105px 7%;position:relative}
+.container{max-width:1250px;margin:auto}
+.eyebrow{color:var(--blue);font-size:12px;letter-spacing:5px;font-weight:bold}
+.heading{font-size:clamp(38px,5vw,66px);margin:17px 0}
+.subtext{color:var(--muted);line-height:1.9;max-width:650px}
+.section-head{text-align:center;margin-bottom:55px}
+.section-head .subtext{margin:0 auto}
+.gradient-text{
+  background:linear-gradient(90deg,var(--blue),var(--purple),var(--pink));
+  -webkit-background-clip:text;background-clip:text;color:transparent
+}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:15px 25px;border:1px solid var(--blue);border-radius:8px;
+  background:linear-gradient(110deg,var(--blue),#9e86ff);
+  color:#070812;font-weight:800;cursor:pointer;transition:.3s
+}
+.btn:hover{transform:translateY(-4px);box-shadow:0 12px 35px #45e6ff33}
+.btn.ghost{background:transparent;color:white;border-color:#ffffff40}
+.btn.ghost:hover{border-color:var(--blue);color:var(--blue)}
+/* Background */
+.ambient{
+  position:fixed;inset:0;pointer-events:none;z-index:-2;
+  background:
+    radial-gradient(ellipse at 15% 15%,#39217c33,transparent 35%),
+    radial-gradient(ellipse at 85% 50%,#005b7130,transparent 35%),
+    #070812
+}
+.grid-bg{
+  position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.18;
+  background-image:linear-gradient(#4c7da51a 1px,transparent 1px),
+  linear-gradient(90deg,#4c7da51a 1px,transparent 1px);
+  background-size:55px 55px;
+  mask-image:linear-gradient(to bottom,black,transparent 90%)
+}
+/* Navigation */
+header{
+  position:fixed;top:0;width:100%;z-index:1000;
+  padding:19px 6%;background:#070812d9;backdrop-filter:blur(18px);
+  border-bottom:1px solid #ffffff10
+}
+.nav{max-width:1400px;margin:auto;display:flex;align-items:center;justify-content:space-between}
+.brand{font-size:22px;font-weight:900;letter-spacing:2px}
+.brand b{color:var(--blue)}
+.navlinks{display:flex;gap:25px;align-items:center;list-style:none}
+.navlinks a{font-size:13px;color:#c6c9d7;transition:.2s}
+.navlinks a:hover{color:var(--blue)}
+.menu{display:none;background:none;border:0;color:var(--blue);font-size:28px;cursor:pointer}
+/* Hero */
+.hero{
+  min-height:100vh;padding-top:130px;display:flex;align-items:center;overflow:hidden
+}
+.hero-grid{
+  max-width:1300px;margin:auto;width:100%;
+  display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:30px
+}
+.hero h1{font-size:clamp(55px,7vw,100px);line-height:.92;letter-spacing:-5px;margin:23px 0}
+.hero-copy{max-width:600px;color:var(--muted);line-height:1.9;margin-bottom:30px}
+.hero-actions{display:flex;gap:13px;flex-wrap:wrap}
+.hero-meta{display:flex;gap:35px;margin-top:40px;flex-wrap:wrap}
+.hero-meta strong{display:block;font-size:25px;color:var(--blue)}
+.hero-meta span{display:block;color:var(--muted);font-size:12px;margin-top:7px}
+.stage{height:530px;display:grid;place-items:center;perspective:1000px}
+.orbit{
+  width:330px;height:330px;position:relative;transform-style:preserve-3d;
+  animation:orbit 15s linear infinite
+}
+.orbit-ring{
+  position:absolute;inset:0;border:2px solid #45e6ff8c;border-radius:50%;
+  box-shadow:0 0 28px #45e6ff35,inset 0 0 25px #45e6ff18
+}
+.orbit-ring.r2{transform:rotateX(65deg);border-color:#ff53d899}
+.orbit-ring.r3{transform:rotateY(65deg);border-color:#8d5bff}
+.orbit-ring.r4{transform:rotateZ(50deg) rotateX(40deg);border-color:#ffffff70}
+.cube{
+  width:145px;height:145px;position:absolute;left:92px;top:92px;
+  transform-style:preserve-3d;animation:cuberotate 8s linear infinite
+}
+.face{
+  position:absolute;inset:0;border:2px solid var(--blue);
+  background:linear-gradient(135deg,#45e6ff24,#8d5bff25);
+  box-shadow:inset 0 0 30px #45e6ff26,0 0 25px #45e6ff25
+}
+.front{transform:translateZ(72px)}
+.back{transform:rotateY(180deg) translateZ(72px)}
+.left{transform:rotateY(-90deg) translateZ(72px)}
+.right{transform:rotateY(90deg) translateZ(72px)}
+.top{transform:rotateX(90deg) translateZ(72px)}
+.bottom{transform:rotateX(-90deg) translateZ(72px)}
+.core-glow{
+  position:absolute;inset:40%;border-radius:50%;
+  background:var(--blue);filter:blur(35px);box-shadow:0 0 90px var(--blue)
+}
+.float-dot{
+  position:absolute;width:9px;height:9px;background:var(--pink);border-radius:50%;
+  box-shadow:0 0 25px var(--pink);animation:float 5s ease-in-out infinite
+}
+.dot1{top:10%;left:10%}.dot2{right:5%;top:35%;animation-delay:1s}
+.dot3{left:18%;bottom:8%;animation-delay:2s}.dot4{right:15%;bottom:12%;animation-delay:3s}
+@keyframes orbit{to{transform:rotateX(360deg) rotateY(360deg)}}
+@keyframes cuberotate{to{transform:rotateX(360deg) rotateY(720deg)}}
+@keyframes float{50%{transform:translate3d(35px,-50px,80px) scale(1.6)}}
+/* Ticker */
+.ticker{overflow:hidden;border-block:1px solid #ffffff14;background:#ffffff04;padding:20px 0}
+.ticker-track{display:flex;gap:45px;width:max-content;animation:ticker 25s linear infinite}
+.ticker span{font-size:14px;font-weight:bold;letter-spacing:4px;color:#c7cbe0}
+.ticker i{color:var(--blue);font-style:normal}
+@keyframes ticker{to{transform:translateX(-50%)}}
+/* About */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:65px;align-items:center}
+.about-art{
+  min-height:450px;display:grid;place-items:center;position:relative;
+  border:1px solid #ffffff17;border-radius:20px;
+  background:radial-gradient(circle,#28234d 0%,#0b0d1a 55%,#080912 100%);
+  overflow:hidden
+}
+.about-art .big{font-size:180px;font-weight:900;color:#ffffff08;position:absolute}
+.about-art .ring{
+  width:250px;height:250px;border:2px solid var(--blue);border-radius:50%;
+  box-shadow:0 0 55px #45e6ff24;transform:rotateX(65deg);
+  animation:artspin 8s linear infinite
+}
+.about-art .ring2{position:absolute;width:180px;height:180px;border-color:var(--pink);transform:rotateY(65deg)}
+@keyframes artspin{to{rotate:360deg}}
+.about-points{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:30px 0}
+.point{padding:18px;background:#ffffff06;border:1px solid #ffffff10;border-radius:10px}
+.point b{display:block;margin-bottom:7px;color:var(--blue)}
+.point span{color:var(--muted);font-size:13px;line-height:1.6}
+/* Services */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.card{
+  padding:30px;border:1px solid #ffffff13;border-radius:17px;
+  background:linear-gradient(145deg,#ffffff09,#ffffff02);
+  transition:transform .25s,border-color .25s;transform-style:preserve-3d;
+  min-height:255px
+}
+.card:hover{border-color:#45e6ff88;box-shadow:0 25px 55px #0007}
+.card-icon{font-size:37px;margin-bottom:22px}
+.card h3{font-size:22px;margin-bottom:13px}
+.card p{color:var(--muted);font-size:14px;line-height:1.8}
+.card a{display:inline-block;color:var(--blue);margin-top:20px;font-size:13px}
+/* Schedule */
+.schedule-wrap{overflow-x:auto;border:1px solid #ffffff12;border-radius:15px}
+table{width:100%;border-collapse:collapse;min-width:650px}
+th,td{text-align:left;padding:22px;border-bottom:1px solid #ffffff10}
+th{color:var(--blue);background:#45e6ff09;font-size:12px;letter-spacing:2px}
+td{color:#c2c7d5;font-size:14px}
+tr:last-child td{border-bottom:0}
+td .level{color:var(--pink);font-size:12px}
+/* Trainers */
+.trainers{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.trainer{
+  overflow:hidden;border:1px solid #ffffff13;border-radius:16px;
+  background:#ffffff04;transition:.3s
+}
+.trainer:hover{transform:translateY(-8px);border-color:var(--purple)}
+.trainer-art{
+  height:250px;display:grid;place-items:center;font-size:100px;
+  background:radial-gradient(circle at 50% 35%,#50418b,#121426 60%,#090a13)
+}
+.trainer-info{padding:22px}
+.trainer-info p{color:var(--blue);font-size:12px;letter-spacing:2px;margin-top:8px}
+.trainer-info small{display:block;color:var(--muted);line-height:1.7;margin-top:12px}
+/* Immersive banner */
+.dimension{
+  border:1px solid #45e6ff40;border-radius:25px;padding:65px;
+  display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;
+  background:radial-gradient(ellipse at 80%,#44216a77,transparent 55%),#ffffff04
+}
+.dimension h2{font-size:clamp(38px,5vw,65px);line-height:1.05;margin:18px 0}
+.dimension p{color:var(--muted);line-height:1.9;margin-bottom:25px}
+.portal-stage{height:300px;display:grid;place-items:center;perspective:800px}
+.portal{
+  width:220px;height:220px;border:4px solid var(--blue);border-radius:50%;
+  box-shadow:0 0 30px var(--blue),inset 0 0 35px #45e6ff30;
+  position:relative;animation:portalspin 5s ease-in-out infinite
+}
+.portal:before,.portal:after{
+  content:"";position:absolute;border:2px solid var(--pink);border-radius:50%;
+  inset:22px;transform:rotateX(65deg)
+}
+.portal:after{inset:45px;border-color:var(--purple);transform:rotateY(65deg)}
+@keyframes portalspin{50%{transform:rotateX(45deg) rotateY(35deg) scale(1.1)}}
+/* Pricing */
+.prices{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.price-card{padding:35px;border:1px solid #ffffff16;border-radius:18px;background:#ffffff04}
+.price-card.popular{border-color:var(--blue);background:linear-gradient(160deg,#45e6ff12,#ffffff03)}
+.price-card h3{font-size:20px}
+.price-card .amount{font-size:48px;font-weight:900;margin:23px 0}
+.amount small{font-size:13px;color:var(--muted);font-weight:normal}
+.price-card p{color:var(--muted);line-height:1.7;font-size:14px}
+.price-card ul{list-style:none;margin:25px 0}
+.price-card li{padding:12px 0;border-bottom:1px solid #ffffff10;color:#c7cbd7;font-size:14px}
+.price-card li:before{content:"✓";color:var(--blue);margin-right:10px}
+.price-card .btn{width:100%}
+/* Testimonials */
+.reviews{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.review{padding:28px;border:1px solid #ffffff14;border-radius:15px;background:#ffffff04}
+.stars{color:#ffdc72;letter-spacing:4px;margin-bottom:18px}
+.review p{color:#c0c5d4;line-height:1.8;font-size:14px}
+.review b{display:block;margin-top:22px}
+.review small{display:block;color:var(--blue);margin-top:7px}
+/* FAQ */
+.faq{max-width:850px;margin:auto}
+details{border-bottom:1px solid #ffffff18;padding:22px 5px}
+summary{cursor:pointer;font-weight:bold}
+details p{color:var(--muted);line-height:1.8;padding-top:15px}
+/* Contact */
+.contact-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:50px}
+.contact-info p{color:var(--muted);line-height:1.8;margin-top:18px}
+.contact-info h3{margin-top:28px;color:var(--blue)}
+.contact-form{padding:30px;border:1px solid #ffffff16;border-radius:18px;background:#ffffff04}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+input,select,textarea{
+  width:100%;padding:15px;margin-bottom:14px;color:white;background:#0c0e1a;
+  border:1px solid #ffffff1c;border-radius:8px;outline:none
+}
+input:focus,select:focus,textarea:focus{border-color:var(--blue)}
+textarea{height:130px;resize:vertical}
+.contact-form .btn{width:100%}
+#formMessage{margin-top:16px;color:var(--blue);line-height:1.7;overflow-wrap:anywhere}
+/* Footer */
+footer{padding:45px 7%;border-top:1px solid #ffffff13}
+.footer-inner{max-width:1250px;margin:auto;display:flex;justify-content:space-between;gap:25px;align-items:center}
+.footer-links{display:flex;gap:18px;flex-wrap:wrap}
+.footer-links a{font-size:13px;color:var(--muted)}
+.footer-links a:hover{color:var(--blue)}
+.backtop{position:fixed;right:20px;bottom:20px;z-index:100;
+  background:var(--blue);color:#060812;width:45px;height:45px;
+  display:grid;place-items:center;border-radius:8px;font-weight:bold
+}
+@media(max-width:1000px){
+  .hero-grid,.about-grid,.dimension,.contact-grid{grid-template-columns:1fr}
+  .hero-content{text-align:center}
+  .hero-copy{margin:0 auto 25px}
+  .hero-actions,.hero-meta{justify-content:center}
+  .stage{height:420px}
+  .trainers{grid-template-columns:repeat(2,1fr)}
+  .cards{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:760px){
+  section{padding:75px 5%}
+  header{padding:16px 5%}
+  .menu{display:block}
+  .navlinks{
+    display:none;position:absolute;top:70px;left:5%;right:5%;
+    background:#0b0d19;border:1px solid #ffffff20;border-radius:12px;
+    padding:22px;flex-direction:column;align-items:stretch;gap:20px
+  }
+  .navlinks.open{display:flex}
+  .navlinks a{display:block;padding:4px}
+  .hero{padding-top:120px}
+  .hero h1{font-size:58px;letter-spacing:-3px}
+  .stage{height:350px;transform:scale(.85)}
+  .orbit{width:270px;height:270px}
+  .cube{left:62px;top:62px}
+  .about-points,.cards,.prices,.reviews{grid-template-columns:1fr}
+  .trainers{grid-template-columns:1fr 1fr}
+  .dimension{padding:30px 22px}
+  .form-row{grid-template-columns:1fr}
+  .footer-inner{flex-direction:column;text-align:center}
+}
+@media(max-width:440px){
+  .trainers{grid-template-columns:1fr}
+  .hero h1{font-size:49px}
+  .hero-meta{gap:22px}
+  .stage{margin-left:-20px;margin-right:-20px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+
+<body>
+<div class="ambient"></div>
+<div class="grid-bg"></div>
+
+<header>
+  <nav class="nav">
+    <a href="#home" class="brand">APEX <b>DIMENSION</b></a>
+    <button class="menu" id="menuBtn" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <ul class="navlinks" id="navLinks">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#programs">Programs</a></li>
+      <li><a href="#trainers">Trainers</a></li>
+      <li><a href="#schedule">Schedule</a></li>
+      <li><a href="#pricing">Membership</a></li>
+      <li><a href="#contact" class="btn">Join Now ↗</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+<section class="hero" id="home">
+  <div class="hero-grid">
+    <div>
+      <div class="eyebrow">THE FUTURE OF HUMAN PERFORMANCE</div>
+      <h1>REDEFINE<br>YOUR <span class="gradient-text">LIMITS.</span></h1>
+      <p class="hero-copy">
+        More than a gym. Enter a new dimension of strength, movement
+        and performance with next-generation training and expert coaching.
+      </p>
+      <div class="hero-actions">
+        <a href="#pricing" class="btn">Explore Membership →</a>
+        <a href="#programs" class="btn ghost">Discover Programs</a>
+      </div>
+      <div class="hero-meta">
+        <div><strong>2,500+</strong><span>TRAINING MEMBERS</span></div>
+        <div><strong>30+</strong><span>EXPERT COACHES</span></div>
+        <div><strong>24/7</strong><span>FITNESS MINDSET</span></div>
+      </div>
+    </div>
+
+    <div class="stage" id="stage">
+      <div class="orbit">
+        <div class="orbit-ring"></div>
+        <div class="orbit-ring r2"></div>
+        <div class="orbit-ring r3"></div>
+        <div class="orbit-ring r4"></div>
+        <div class="core-glow"></div>
+        <div class="cube">
+          <div class="face front"></div><div class="face back"></div>
+          <div class="face left"></div><div class="face right"></div>
+          <div class="face top"></div><div class="face bottom"></div>
+        </div>
+        <div class="float-dot dot1"></div><div class="float-dot dot2"></div>
+        <div class="float-dot dot3"></div><div class="float-dot dot4"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker">
+  <div class="ticker-track">
+    <span>STRENGTH <i>✦</i></span><span>PERFORMANCE <i>✦</i></span>
+    <span>RECOVERY <i>✦</i></span><span>DISCIPLINE <i>✦</i></span>
+    <span>TRANSFORMATION <i>✦</i></span><span>STRENGTH <i>✦</i></span>
+    <span>PERFORMANCE <i>✦</i></span><span>RECOVERY <i>✦</i></span>
+    <span>DISCIPLINE <i>✦</i></span><span>TRANSFORMATION <i>✦</i></span>
+  </div>
+</div>
+
+<section id="about">
+  <div class="container about-grid">
+    <div class="about-art">
+      <div class="big">APEX</div>
+      <div class="ring"></div><div class="ring ring2"></div>
+    </div>
+    <div>
+      <div class="eyebrow">BUILT FOR THE NEXT LEVEL</div>
+      <h2 class="heading">YOUR GOALS.<br><span class="gradient-text">OUR MISSION.</span></h2>
+      <p class="subtext">
+        APEX Dimension brings together serious training, smart programming
+        and a motivating environment. Whether you are just starting or
+        chasing your next personal best, your journey starts here.
+      </p>
+      <div class="about-points">
+        <div class="point"><b>01 / Coaching</b><span>Guidance built around your goals.</span></div>
+        <div class="point"><b>02 / Equipment</b><span>Spaces for strength and conditioning.</span></div>
+        <div class="point"><b>03 / Community</b><span>Train alongside people who motivate you.</span></div>
+        <div class="point"><b>04 / Progress</b><span>Build consistency and track your growth.</span></div>
+      </div>
+      <a href="#trainers" class="btn">Meet Our Coaches →</a>
+    </div>
+  </div>
+</section>
+
+<section id="programs">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">FIND YOUR TRAINING STYLE</div>
+      <h2 class="heading">PROGRAMS THAT <span class="gradient-text">MOVE YOU.</span></h2>
+      <p class="subtext">Choose a discipline, challenge yourself and build a routine that fits your goals.</p>
+    </div>
+    <div class="cards">
+      <article class="card"><div class="card-icon">🏋️</div><h3>Strength Training</h3><p>Build foundational strength with structured resistance training and progressive overload.</p><a href="#contact" data-program="Strength Training" class="program-link">Ask about this program ↗</a></article>
+      <article class="card"><div class="card-icon">⚡</div><h3>HIIT & Conditioning</h3><p>Mix cardio and functional movements into dynamic, time-efficient workouts.</p><a href="#contact" data-program="HIIT & Conditioning" class="program-link">Ask about this program ↗</a></article>
+      <article class="card"><div class="card-icon">🥊</div><h3>Combat Fitness</h3><p>Practice boxing-inspired fitness drills for coordination, conditioning and confidence.</p><a href="#contact" data-program="Combat Fitness" class="program-link">Ask about this program ↗</a></article>
+      <article class="card"><div class="card-icon">🧘</div><h3>Mobility & Recovery</h3><p>Improve movement quality with guided stretching, mobility work and recovery sessions.</p><a href="#contact" data-program="Mobility & Recovery" class="program-link">Ask about this program ↗</a></article>
+      <article class="card"><div class="card-icon">🏃</div><h3>Athletic Performance</h3><p>Train agility, balance, speed and power through carefully planned movement sessions.</p><a href="#contact" data-program="Athletic Performance" class="program-link">Ask about this program ↗</a></article>
+      <article class="card"><div class="card-icon">🎯</div><h3>Personal Coaching</h3><p>Work with a coach to create a training plan tailored to your experience and goals.</p><a href="#contact" data-program="Personal Coaching" class="program-link">Ask about this program ↗</a></article>
+    </div>
+  </div>
+</section>
+
+<section id="schedule">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">PLAN YOUR WEEK</div>
+      <h2 class="heading">WEEKLY <span class="gradient-text">SCHEDULE.</span></h2>
+      <p class="subtext">Sample group-class schedule. Contact the gym to confirm actual class times and availability.</p>
+    </div>
+    <div class="schedule-wrap">
+      <table>
+        <thead><tr><th>DAY</th><th>CLASS</th><th>TIME</th><th>LEVEL</th><th>BOOKING</th></tr></thead>
+        <tbody>
+          <tr><td>Monday</td><td>Strength Foundations</td><td>7:00 AM</td><td class="level">All levels</td><td><a href="#contact" class="program-link" data-program="Strength Foundations">Book ↗</a></td></tr>
+          <tr><td>Tuesday</td><td>HIIT Circuit</td><td>6:00 PM</td><td class="level">Intermediate</td><td><a href="#contact" class="program-link" data-program="HIIT Circuit">Book ↗</a></td></tr>
+          <tr><td>Wednesday</td><td>Mobility Flow</td><td>7:00 AM</td><td class="level">All levels</td><td><a href="#contact" class="program-link" data-program="Mobility Flow">Book ↗</a></td></tr>
+          <tr><td>Thursday</td><td>Combat Conditioning</td><td>6:30 PM</td><td class="level">All levels</td><td><a href="#contact" class="program-link" data-program="Combat Conditioning">Book ↗</a></td></tr>
+          <tr><td>Friday</td><td>Athletic Performance</td><td>5:30 PM</td><td class="level">Advanced</td><td><a href="#contact" class="program-link" data-program="Athletic Performance">Book ↗</a></td></tr>
+          <tr><td>Saturday</td><td>Community Workout</td><td>9:00 AM</td><td class="level">All levels</td><td><a href="#contact" class="program-link" data-program="Community Workout">Book ↗</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="trainers">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">YOUR TEAM FOR PROGRESS</div>
+      <h2 class="heading">MEET THE <span class="gradient-text">COACHES.</span></h2>
+      <p class="subtext">Illustrative trainer profiles — replace names and details with your real team.</p>
+    </div>
+    <div class="trainers">
+      <article class="trainer"><div class="trainer-art">🏋️</div><div class="trainer-info"><h3>Alex Morgan</h3><p>STRENGTH COACH</p><small>Strength foundations, technique and progressive training.</small></div></article>
+      <article class="trainer"><div class="trainer-art">🏃</div><div class="trainer-info"><h3>Jordan Blake</h3><p>PERFORMANCE COACH</p><small>Athletic conditioning, speed and movement development.</small></div></article>
+      <article class="trainer"><div class="trainer-art">🥊</div><div class="trainer-info"><h3>Sam Taylor</h3><p>CONDITIONING COACH</p><small>Boxing-inspired fitness and group conditioning.</small></div></article>
+      <article class="trainer"><div class="trainer-art">🧘</div><div class="trainer-info"><h3>Riley Chen</h3><p>MOBILITY COACH</p><small>Mobility, flexibility and movement quality.</small></div></article>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container dimension">
+    <div>
+      <div class="eyebrow">NOT JUST ANOTHER WORKOUT</div>
+      <h2>STEP INTO A<br><span class="gradient-text">NEW DIMENSION.</span></h2>
+      <p>Explore an immersive visual world of moving geometry, glowing energy and interactive depth. This website uses browser-based CSS 3D effects to create the experience.</p>
+      <a href="#contact" class="btn">Book Your Trial →</a>
+    </div>
+    <div class="portal-stage"><div class="portal"></div></div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">SIMPLE MEMBERSHIP OPTIONS</div>
+      <h2 class="heading">PICK YOUR <span class="gradient-text">PLAN.</span></h2>
+      <p class="subtext">Example prices for the demo. Change the amounts and benefits to match your gym.</p>
+    </div>
+    <div class="prices">
+      <article class="price-card">
+        <h3>ESSENTIAL</h3><div class="amount">$29 <small>/ month</small></div>
+        <p>A simple start to your fitness routine.</p>
+        <ul><li>Gym floor access</li><li>Standard equipment</li><li>Locker facilities</li><li>Fitness orientation</li></ul>
+        <button class="btn choose-plan" data-plan="Essential">Choose Essential</button>
+      </article>
+      <article class="price-card popular">
+        <div class="eyebrow">MOST POPULAR</div>
+        <h3 style="margin-top:14px">PERFORMANCE</h3><div class="amount">$59 <small>/ month</small></div>
+        <p>More options to keep your progress moving.</p>
+        <ul><li>All Essential benefits</li><li>Group training classes</li><li>Progress check-ins</li><li>One coaching session</li></ul>
+        <button class="btn choose-plan" data-plan="Performance">Choose Performance</button>
+      </article>
+      <article class="price-card">
+        <h3>ELITE</h3><div class="amount">$99 <small>/ month</small></div>
+        <p>Additional support for committed members.</p>
+        <ul><li>All Performance benefits</li><li>Personal coaching session</li><li>Priority class booking</li><li>Recovery consultation</li></ul>
+        <button class="btn choose-plan" data-plan="Elite">Choose Elite</button>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">THE MEMBER EXPERIENCE</div>
+      <h2 class="heading">BUILT ON <span class="gradient-text">CONSISTENCY.</span></h2>
+      <p class="subtext">Sample testimonial cards for the website template. Replace these with genuine member reviews before publishing.</p>
+    </div>
+    <div class="reviews">
+      <article class="review"><div class="stars">★★★★★</div><p>“The layout, coaching options and variety of sessions make it easier to stick to my weekly routine.”</p><b>Demo Member One</b><small>Strength training</small></article>
+      <article class="review"><div class="stars">★★★★★</div><p>“I enjoy having different workouts to choose from and a plan that keeps my goals in focus.”</p><b>Demo Member Two</b><small>Group classes</small></article>
+      <article class="review"><div class="stars">★★★★★</div><p>“The immersive look and feel is different, and the training structure helps keep me motivated.”</p><b>Demo Member Three</b><small>Performance program</small></article>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">GOOD TO KNOW</div>
+      <h2 class="heading">FREQUENT <span class="gradient-text">QUESTIONS.</span></h2>
+    </div>
+    <div class="faq">
+      <details><summary>Can beginners join?</summary><p>Yes. Choose a suitable program and discuss your experience and goals with a qualified coach before beginning.</p></details>
+      <details><summary>Can I try the gym before joining?</summary><p>Use the Book a Trial form below to request a visit. A real gym needs to connect this form to its booking process.</p></details>
+      <details><summary>How do membership buttons work?</summary><p>Select a plan above and the contact form will open with your selected plan filled in.</p></details>
+      <details><summary>Is the 4D effect real holographic technology?</summary><p>No. The visual effect is created with CSS 3D transforms, perspective and animation in your browser.</p></details>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="container contact-grid">
+    <div class="contact-info">
+      <div class="eyebrow">YOUR NEXT CHAPTER STARTS HERE</div>
+      <h2 class="heading">LET'S MAKE<br><span class="gradient-text">IT HAPPEN.</span></h2>
+      <p>Ask about a membership, request a trial or tell us which training program interests you.</p>
+      <h3>VISIT APEX DIMENSION</h3>
+      <p>Replace this demo location with your actual gym address.</p>
+      <h3>EMAIL</h3><p>hello@example.com</p>
+      <h3>PHONE</h3><p>Replace with your gym's contact number.</p>
+    </div>
+    <form class="contact-form" id="contactForm">
+      <div class="form-row">
+        <input id="fullName" name="name" placeholder="Full name" required>
+        <input id="email" name="email" type="email" placeholder="Email address" required>
+      </div>
+      <input id="phone" name="phone" type="tel" placeholder="Phone number">
+      <select id="interest" name="interest" required>
+        <option value="">Choose a program or plan</option>
+        <optgroup label="Membership">
+          <option>Essential</option><option>Performance</option><option>Elite</option>
+        </optgroup>
+        <optgroup label="Programs">
+          <option>Strength Training</option><option>HIIT & Conditioning</option>
+          <option>Combat Fitness</option><option>Mobility & Recovery</option>
+          <option>Athletic Performance</option><option>Personal Coaching</option>
+        </optgroup>
+        <option>Free Trial</option>
+      </select>
+      <textarea id="message" name="message" placeholder="Your goals or message"></textarea>
+      <button type="submit" class="btn">Submit Request →</button>
+      <p id="formMessage" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <a href="#home" class="brand">APEX <b>DIMENSION</b></a>
+    <div class="footer-links">
+      <a href="#about">About</a><a href="#programs">Programs</a>
+      <a href="#pricing">Membership</a><a href="#faq">FAQ</a><a href="#contact">Contact</a>
+    </div>
+    <span style="color:var(--muted);font-size:13px">© <span id="year"></span> APEX Dimension</span>
+  </div>
+</footer>
+<a href="#home" class="backtop" aria-label="Back to top">↑</a>
+
+<script>
+const menuBtn = document.getElementById("menuBtn");
+const navLinks = document.getElementById("navLinks");
+
+menuBtn.addEventListener("click", () => {
+  const open = navLinks.classList.toggle("open");
+  menuBtn.setAttribute("aria-expanded", String(open));
+  menuBtn.textContent = open ? "✕" : "☰";
+});
+
+navLinks.querySelectorAll("a").forEach(link => {
+  link.addEventListener("click", () => {
+    navLinks.classList.remove("open");
+    menuBtn.setAttribute("aria-expanded", "false");
+    menuBtn.textContent = "☰";
+  });
+});
+
+/* Select a plan and jump to the contact form */
+document.querySelectorAll(".choose-plan").forEach(button => {
+  button.addEventListener("click", () => {
+    document.getElementById("interest").value = button.dataset.plan;
+    document.getElementById("contact").scrollIntoView({behavior:"smooth"});
+    document.getElementById("fullName").focus({preventScroll:true});
+  });
+});
+
+/* Program and schedule links fill the form */
+document.querySelectorAll(".program-link").forEach(link => {
+  link.addEventListener("click", () => {
+    document.getElementById("interest").value = link.dataset.program;
+  });
+});
+
+/* Interactive 3D movement on desktop */
+const stage = document.getElementById("stage");
+const orbit = stage.querySelector(".orbit");
+
+stage.addEventListener("mousemove", event => {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const rect = stage.getBoundingClientRect();
+  const x = (event.clientX - rect.left) / rect.width - .5;
+  const y = (event.clientY - rect.top) / rect.height - .5;
+  orbit.style.animationPlayState = "paused";
+  orbit.style.transform = `rotateX(${y * -25}deg) rotateY(${x * 30}deg)`;
+});
+
+stage.addEventListener("mouseleave", () => {
+  orbit.style.transform = "";
+  orbit.style.animationPlayState = "";
+});
+
+/* Tilt cards with pointer position */
+document.querySelectorAll(".card").forEach(card => {
+  card.addEventListener("mousemove", event => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const rect = card.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width - .5;
+    const y = (event.clientY - rect.top) / rect.height - .5;
+    card.style.transform =
+      `perspective(800px) rotateX(${-y * 9}deg) rotateY(${x * 9}deg) translateY(-4px)`;
+  });
+  card.addEventListener("mouseleave", () => card.style.transform = "");
+});
+
+/*
+  Demo form: validates input and opens an email draft.
+  Replace the email address below with your real business email.
+*/
+document.getElementById("contactForm").addEventListener("submit", event => {
+  event.preventDefault();
+
+  const name = document.getElementById("fullName").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const interest = document.getElementById("interest").value;
+  const message = document.getElementById("message").value.trim();
+  const status = document.getElementById("formMessage");
+
+  if (!name || !email || !interest) {
+    status.textContent = "Please fill in your name, email and selection.";
+    return;
+  }
+
+  const businessEmail = "hello@example.com";
+  const subject = encodeURIComponent("Gym enquiry: " + interest);
+  const body = encodeURIComponent(
+    "Name: " + name + "\nEmail: " + email +
+    "\nPhone: " + phone + "\nInterest: " + interest +
+    "\nMessage: " + message
+  );
+
+  status.textContent =
+    "Your email app will open with your request. Replace hello@example.com in the code with your real gym email.";
+
+  window.location.href =
+    "mailto:" + businessEmail + "?subject=" + subject + "&body=" + body;
+});
+
+document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
+```
